@@ -1,12 +1,21 @@
 # Importando os modulos necessários
 import tkinter as tk
+import cv2
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import Image, ImageTk, ImageOps
+import numpy as np
 
-# Iniciando as váriaveis globais
-zoom_level = 0
-zoom_size = 1000
+# Iniciando as variáveis globais
+zoom_level = 2
+zoom_size = 300
+zoom_width = 0
+zoom_height = 0
+zoom_max = 10
+image_reduced = None
+
+# Adicionando uma nova variável global para armazenar a imagem original
+img_original = None
 
 # Função para abrir a imagem a partir de um arquivo
 def open_image():
@@ -15,9 +24,13 @@ def open_image():
     # Verifica se o arquivo foi escolhido
     if file_path:
         try:
-            # Abre a imagem usando o modulo de imagem do PIL
+            # Abre a imagem usando o modulo de imagem do OpenCV
+            img = cv2.imread(file_path, cv2.IMREAD_COLOR)
+            # Converte a imagem para o formato RGB
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            # Cria um objeto Image do PIL a partir da matriz numpy
             global image
-            image = Image.open(file_path)
+            image = Image.fromarray(img)
             # Redimensiona e salva a imagem como variável global
             global image_resized
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
@@ -29,47 +42,92 @@ def open_image():
 
 # Função para atualizar o image label com uma imagem nova
 def update_image(image):
-    # Salva a imagem como uma PhotoImage object e atualiza o image label
-    global image_label, image_tk
+    global image_label, image_tk, img_original
+    # Salva a imagem original se ela estiver sendo exibida
+    if img_original is None or img_original.size != image.size:
+        img_original = image.copy()
+    # Atualiza o image label com a nova imagem
     image_tk = ImageTk.PhotoImage(image)
     image_label.config(image=image_tk)
+ 
+# Função para resetar o zoom   
+def reset_zoom():
+    global image, image_resized, image_tk, zoom_level
+    # Restaura a imagem original e redefine o nível de zoom
+    image = image_resized.copy()
+    zoom_level = 0
+    update_image(image)
 
 # Função para dar zoom na imagem
 def zoom_in():
-    # Aumente o nível de zoom e atualize a imagem ampliada
-    global zoom_level
-    zoom_level += 1
-    update_zoomed_image()
+    global zoom_level, image, image_resized, image_tk, zoom_width, zoom_height
+    # Aumente o nível de zoom se ele ainda não estiver no máximo
+    if zoom_level < zoom_max:
+        zoom_level += 1
+        if zoom_width > 0 and zoom_height > 0:
+            zoomed_image = image_resized.resize((zoom_width, zoom_height), Image.Resampling.LANCZOS)
+            x = max(0, image_label.winfo_rootx() - root.winfo_rootx() - zoom_size//2)
+            y = max(0, image_label.winfo_rooty() - root.winfo_rooty() - zoom_size//2)
+            cropped_image = zoomed_image.crop((x, y, x + zoom_size, y + zoom_size))
+            # Atualize a variável global image com a imagem ampliada
+            image = zoomed_image
+            # Atualize o rótulo da imagem com a imagem ampliada
+            image_tk = ImageTk.PhotoImage(cropped_image)
+            image_label.config(image=image_tk)
 
 # Função para diminuir o zoom na imagem
 def zoom_out():
-    # Diminua o nível de zoom e atualize a imagem ampliada
-    global zoom_level
-    zoom_level = max(0, zoom_level - 1)
-    update_zoomed_image()
-
-# Função para atualizar a imagem ampliada
+    global zoom_level, image, image_resized, image_tk, zoom_width, zoom_height, image_reduced
+    # Verifique se o nível de zoom atual é maior que 0 antes de diminuir
+    if zoom_level > 0:
+        zoom_level -= 1
+        if zoom_level == 0:
+            image = image_resized.copy()
+        else:
+            if image_reduced is None or image_reduced.size != image.size:
+                image_reduced = image.copy()
+            image_reduced = image_reduced.resize((int(image.width * (1 - zoom_level * 0.1)), int(image.height * (1 - zoom_level * 0.1))), Image.Resampling.LANCZOS)
+            image = image_reduced
+        x = max(0, image_label.winfo_rootx() - root.winfo_rootx() - zoom_size//2)
+        y = max(0, image_label.winfo_rooty() - root.winfo_rooty() - zoom_size//2)
+        cropped_image = image.crop((x, y, x + zoom_size, y + zoom_size))
+        # Atualize o rótulo da imagem com a imagem reduzida
+        image_tk = ImageTk.PhotoImage(cropped_image)
+        image_label.config(image=image_tk)
+        
+# Atualiza a imagem com zoom
 def update_zoomed_image(event=None):
-    global zoom_level, zoom_size, image, image_label, image_tk
+    global zoom_level, zoom_size, image, image_label, image_tk, zoom_width, zoom_height
     if event is not None and event.widget is image_label:
         # Calcule o tamanho e a posição da imagem ampliada
-        zoomed_image = image.resize((int(image.width * (1 + zoom_level * 0.1)), int(image.height * (1 + zoom_level * 0.1))), Image.Resampling.LANCZOS)
+        zoom_width = int(image.width * (1 + zoom_level * 0.1))
+        zoom_height = int(image.height * (1 + zoom_level * 0.1))
+        zoomed_image = image.resize((zoom_width, zoom_height), Image.Resampling.LANCZOS)
         x = max(0, event.x - zoom_size//2)
         y = max(0, event.y - zoom_size//2)
         cropped_image = zoomed_image.crop((x, y, x + zoom_size, y + zoom_size))
+        # Atualize a variável global image com a imagem ampliada
+        image = zoomed_image
         # Atualize o rótulo da imagem com a imagem ampliada
         image_tk = ImageTk.PhotoImage(cropped_image)
         image_label.config(image=image_tk)
 
-# Função para ajustar o contraste da imagem
-def adjust_contrast(min_value, max_value):   
-    # Converta a imagem para tons de cinza se ainda não estiver
-    global image, image_resized
-    if image.mode not in ('L', 'P'):
-        image = image.convert('L')
-    # Ajusta o contraste usando o módulo PIL ImageOps e atualiza o rótulo da imagem
-    image = ImageOps.autocontrast(image, cutoff=(min_value, max_value))
-    update_image(image)
+# Função que atualiza o contraste
+def adjust_contrast(min_value, max_value):
+    global img_original, image_label, image_tk
+    # Calcula o nível de contraste
+    level = (max_value - min_value) * 255 / 100
+    # Verifica se a imagem original existe
+    if img_original is not None:
+        # Converte a imagem original para uma matriz numpy
+        img_np = np.asarray(img_original)
+        # Aplica o nível de contraste usando a função cv2.convertScaleAbs()
+        img_contrast = cv2.convertScaleAbs(img_np, alpha=level/100)
+        # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
+        img_new = Image.fromarray(img_contrast)
+        # Redimensiona a nova imagem e atualiza o rótulo da imagem
+        img_resized = img_new.resize((400, 400), Image.Resampling.LANCZOS)
+        update_image(img_resized)
 
 # Cria a janela principal e define o título
 root = tk.Tk()
