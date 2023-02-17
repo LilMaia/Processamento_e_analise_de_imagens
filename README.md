@@ -6,8 +6,8 @@ Este repositório contém o código do Trabalho Prático de Processamento e Aná
 O trabalho foi desenvolvido pelos seguintes alunos:
 
 - Rafael Maia - 635921, Coração Eucarístico
-- Jonathan Tavares - 662103, Coração Eucarístico
-- Giulia Chiucchi - Matrícula, Coração Eucarístico
+- Jonathan Tavares - -------, Coração Eucarístico
+- Giulia Chiucchi - 662103, Coração Eucarístico
 
 ## Descrição
 O objetivo deste trabalho é implementar um programa que leia imagens de exames mamográficos, segmente a área da mama do fundo e possibilite o reconhecimento automático da densidade mamária, de acordo com a escala BIRADS. Para isso, é necessário realizar a segmentação automática da região da mama, deixando os elementos de fundo e anotações com valor preto (0), e, em seguida, classificar a densidade da mama, que pode ser classificada em quatro categorias: BIRADS I, BIRADS II, BIRADS III e BIRADS IV.
