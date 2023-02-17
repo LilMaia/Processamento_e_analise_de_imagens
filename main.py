@@ -112,19 +112,19 @@ def update_zoomed_image(event=None):
         image_tk = ImageTk.PhotoImage(cropped_image)
         image_label.config(image=image_tk)
 
-# Função que atualiza o contraste
+# Função que atualiza o contraste usando contraste por janelamento
 def adjust_contrast(min_value, max_value):
     global img_original, image_label, image_tk
-    # Calcula o nível de contraste
-    level = (max_value - min_value) * 255 / 100
     # Verifica se a imagem original existe
     if img_original is not None:
         # Converte a imagem original para uma matriz numpy
         img_np = np.asarray(img_original)
-        # Aplica o nível de contraste usando a função cv2.convertScaleAbs()
-        img_contrast = cv2.convertScaleAbs(img_np, alpha=level/100)
+        # Aplica o janelamento
+        img_janelado = np.clip(img_np, min_value, max_value)
+        # Normaliza a imagem
+        img_norm = cv2.normalize(img_janelado, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
         # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
-        img_new = Image.fromarray(img_contrast)
+        img_new = Image.fromarray(img_norm)
         # Redimensiona a nova imagem e atualiza o rótulo da imagem
         img_resized = img_new.resize((400, 400), Image.Resampling.LANCZOS)
         update_image(img_resized)
