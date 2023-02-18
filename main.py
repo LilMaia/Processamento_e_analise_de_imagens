@@ -1,3 +1,7 @@
+# Rafael Maia - 635921, Coração Eucarístico
+# Jonathan Tavares - 540504, Coração Eucarístico
+# Giulia Chiucchi - 662103, Coração Eucarístico
+
 # Importando os modulos necessários
 import tkinter as tk
 import cv2
@@ -32,8 +36,9 @@ def open_image():
             global image
             image = Image.fromarray(img)
             # Redimensiona e salva a imagem como variável global
-            global image_resized
+            global image_resized, img_original
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
+            img_original = image_resized.copy()
             # Atualiza o image label com o tamanho redimensionado
             update_image(image_resized)
         except Exception as e:
@@ -49,51 +54,39 @@ def update_image(image):
     # Atualiza o image label com a nova imagem
     image_tk = ImageTk.PhotoImage(image)
     image_label.config(image=image_tk)
- 
-# Função para resetar o zoom   
+
+# Função para resetar o zoom
 def reset_zoom():
-    global image, image_resized, image_tk, zoom_level
+    global image, image_resized, image_tk, zoom_level, img_original
     # Restaura a imagem original e redefine o nível de zoom
-    image = image_resized.copy()
+    image_resized = img_original.resize((400, 400), Image.LANCZOS)
     zoom_level = 0
-    update_image(image)
+    # Atualiza a imagem com o tamanho padrão
+    update_image(image_resized)
 
 # Função para dar zoom na imagem
 def zoom_in():
-    global zoom_level, image, image_resized, image_tk, zoom_width, zoom_height
-    # Aumente o nível de zoom se ele ainda não estiver no máximo
-    if zoom_level < zoom_max:
-        zoom_level += 1
-        if zoom_width > 0 and zoom_height > 0:
-            zoomed_image = image_resized.resize((zoom_width, zoom_height), Image.Resampling.LANCZOS)
-            x = max(0, image_label.winfo_rootx() - root.winfo_rootx() - zoom_size//2)
-            y = max(0, image_label.winfo_rooty() - root.winfo_rooty() - zoom_size//2)
-            cropped_image = zoomed_image.crop((x, y, x + zoom_size, y + zoom_size))
-            # Atualize a variável global image com a imagem ampliada
-            image = zoomed_image
-            # Atualize o rótulo da imagem com a imagem ampliada
-            image_tk = ImageTk.PhotoImage(cropped_image)
-            image_label.config(image=image_tk)
-
-# Função para diminuir o zoom na imagem
-def zoom_out():
-    global zoom_level, image, image_resized, image_tk, zoom_width, zoom_height, image_reduced
-    # Verifique se o nível de zoom atual é maior que 0 antes de diminuir
-    if zoom_level > 0:
-        zoom_level -= 1
-        if zoom_level == 0:
-            image = image_resized.copy()
-        else:
-            if image_reduced is None or image_reduced.size != image.size:
-                image_reduced = image.copy()
-            image_reduced = image_reduced.resize((int(image.width * (1 - zoom_level * 0.1)), int(image.height * (1 - zoom_level * 0.1))), Image.Resampling.LANCZOS)
-            image = image_reduced
-        x = max(0, image_label.winfo_rootx() - root.winfo_rootx() - zoom_size//2)
-        y = max(0, image_label.winfo_rooty() - root.winfo_rooty() - zoom_size//2)
-        cropped_image = image.crop((x, y, x + zoom_size, y + zoom_size))
-        # Atualize o rótulo da imagem com a imagem reduzida
-        image_tk = ImageTk.PhotoImage(cropped_image)
-        image_label.config(image=image_tk)
+    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original
+    # Calcula o novo nível de zoom
+    new_zoom_level = zoom_level + 1
+    # Verifica se o novo nível de zoom está dentro do limite máximo
+    if new_zoom_level <= zoom_max:
+        # Calcula o novo tamanho da imagem
+        zoom_width = int(image_resized.width * (1 + new_zoom_level/10))
+        zoom_height = int(image_resized.height * (1 + new_zoom_level/10))
+        # Calcula a posição do canto superior esquerdo da área da imagem que será exibida (a imagem ampliada)
+        x = int((zoom_width - image_resized.width) / 2)
+        y = int((zoom_height - image_resized.height) / 2)
+        # Calcula a posição do canto superior esquerdo da área da imagem original que será recortada para criar a imagem ampliada
+        x_original = int(x / (1 + new_zoom_level/10))
+        y_original = int(y / (1 + new_zoom_level/10))
+        # Redimensiona a imagem original com o novo tamanho, recorta-a na área calculada acima e, em seguida, redimensiona-a novamente para o tamanho da exibição
+        image = img_original.resize((zoom_width, zoom_height), Image.LANCZOS).crop((x_original, y_original, x_original + image_resized.width, y_original + image_resized.height)).resize((400, 400), Image.LANCZOS)
+        # Atualiza o nível de zoom e a imagem redimensionada
+        zoom_level = new_zoom_level
+        image_resized = image
+        # Atualiza a imagem com o novo tamanho
+        update_image(image)
         
 # Atualiza a imagem com zoom
 def update_zoomed_image(event=None):
@@ -135,7 +128,6 @@ root.title("Image Viewer")
 
 # Cria o rótulo da imagem e adiciona ele à janela principal
 image_label = tk.Label(root)
-image_label.bind("<Button-1>", update_zoomed_image)
 image_label.pack()
 
 # Cria o botão "Abrir" e adiciona ele à janela principal
@@ -146,8 +138,8 @@ open_button.pack()
 zoom_in_button = tk.Button(root, text="Zoom In", command=zoom_in)
 zoom_in_button.pack()
 
-# Cria o botão "Zoom Out" e adiciona ele à janela principal
-zoom_out_button = tk.Button(root, text="Zoom Out", command=zoom_out)
+# Cria o botão "Reset Zoom" e adiciona ele à janela principal
+zoom_out_button = tk.Button(root, text="Reset Zoom", command=reset_zoom)
 zoom_out_button.pack()
 
 # Cria o botão "Min Value" e adiciona ele à janela principal
