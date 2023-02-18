@@ -144,8 +144,8 @@ def open_win(image):
    # Atualiza o image label com a nova imagem
    image_tk = ImageTk.PhotoImage(image)
    image_label.config(image=image_tk)
-   print(tk.Toplevel.winfo_exists(new))
-
+   new.geometry("400x400")
+   
 
 # Cria o botão "Abrir" e adiciona ele à janela principal
 open_button = tk.Button(root, text="Open", command=open_image)
