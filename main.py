@@ -4,11 +4,11 @@
 
 # Importando os modulos necessários
 import tkinter as tk
+from tkinter import Toplevel, filedialog, messagebox
+
 import cv2
-from tkinter import filedialog
-from tkinter import messagebox
-from PIL import Image, ImageTk, ImageOps
 import numpy as np
+from PIL import Image, ImageOps, ImageTk
 
 # Iniciando as variáveis globais
 zoom_level = 2
@@ -20,6 +20,8 @@ image_reduced = None
 
 # Adicionando uma nova variável global para armazenar a imagem original
 img_original = None
+
+
 
 # Função para abrir a imagem a partir de um arquivo
 def open_image():
@@ -40,7 +42,8 @@ def open_image():
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
             img_original = image_resized.copy()
             # Atualiza o image label com o tamanho redimensionado
-            update_image(image_resized)
+            open_win(image_resized)
+            """ update_image(image_resized) """
         except Exception as e:
             # Mostra um erro se houver falha na hora de abrir a imagem
             messagebox.showerror("Error", "Failed to open image: {}".format(e))
@@ -125,10 +128,24 @@ def adjust_contrast(min_value, max_value):
 # Cria a janela principal e define o título
 root = tk.Tk()
 root.title("Image Viewer")
+root.geometry("400x400")
 
 # Cria o rótulo da imagem e adiciona ele à janela principal
-image_label = tk.Label(root)
-image_label.pack()
+def open_win(image):
+   global image_label, image_tk, img_original
+    
+   new = Toplevel(root)
+   new.title("New Window")
+   image_label = tk.Label(new)
+   image_label.pack()
+   # Salva a imagem original se ela estiver sendo exibida
+   if img_original is None or img_original.size != image.size:
+      img_original = image.copy()
+   # Atualiza o image label com a nova imagem
+   image_tk = ImageTk.PhotoImage(image)
+   image_label.config(image=image_tk)
+   print(tk.Toplevel.winfo_exists(new))
+
 
 # Cria o botão "Abrir" e adiciona ele à janela principal
 open_button = tk.Button(root, text="Open", command=open_image)
