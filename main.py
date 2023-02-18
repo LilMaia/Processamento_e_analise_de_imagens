@@ -108,6 +108,8 @@ def zoom_in():
         image_resized = image
         # Atualiza a imagem com o novo tamanho
         update_image(image)
+        if(min_value_slider.get() != 0 or max_value_slider.get() != 0) :
+            adjust_contrast(min_value_slider.get(), max_value_slider.get())
 
 # Cria a janela principal e define o título
 root = tk.Tk()
