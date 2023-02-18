@@ -130,6 +130,12 @@ root = tk.Tk()
 root.title("Image Viewer")
 root.geometry("400x400")
 
+# Criando a barra de menus
+menu_bar = tk.Menu(root)
+
+# Setando o menu da janela principal
+root.config(menu=menu_bar)
+
 # Cria o rótulo da imagem e adiciona ele à janela principal
 def open_win(image):
    global image_label, image_tk, img_original
@@ -146,6 +152,11 @@ def open_win(image):
    image_label.config(image=image_tk)
    new.geometry("400x400")
    
+# Adicionando o menu "File" à barra de menus
+file_menu = tk.Menu(menu_bar, tearoff=0)
+file_menu.add_command(label="Exit", command=root.quit)
+menu_bar.add_cascade(label="File", menu=file_menu)
+
 
 # Cria o botão "Abrir" e adiciona ele à janela principal
 open_button = tk.Button(root, text="Open", command=open_image)
