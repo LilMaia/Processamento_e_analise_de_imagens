@@ -5,7 +5,6 @@
 # Importando os modulos necessários
 import tkinter as tk
 from tkinter import filedialog, messagebox
-from tkinter import filedialog, messagebox
 
 import cv2
 import numpy as np
@@ -21,8 +20,6 @@ image_reduced = None
 
 # Adicionando uma nova variável global para armazenar a imagem original
 img_original = None
-min_value = None
-max_value = None
 min_value = None
 max_value = None
 
@@ -87,25 +84,6 @@ def adjust_contrast(min_value, max_value):
         img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
         update_image(img_resized2)
 
-
-# Função que atualiza o contraste usando contraste por janelamento
-def adjust_contrast(min_value, max_value):
-    global img_original, image_label, image_tk, image_resized
-    # Verifica se a imagem original existe
-    if img_original is not None:
-        # Converte a imagem original para uma matriz numpy
-        img_np = np.asarray(image_resized)
-        # Aplica o janelamento
-        img_janelado = np.clip(img_np, min_value, max_value)
-        # Normaliza a imagem
-        img_norm = cv2.normalize(img_janelado, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
-        img_new = Image.fromarray(img_norm)
-        # Redimensiona a nova imagem e atualiza o rótulo da imagem
-        img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
-        update_image(img_resized2)
-
-
 # Função para dar zoom na imagem
 def zoom_in():
     global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original, min_value, max_value
@@ -124,7 +102,6 @@ def zoom_in():
         x_original = int(x / (1 + new_zoom_level/10))
         y_original = int(y / (1 + new_zoom_level/10))
         # Redimensiona a imagem original com o novo tamanho, recorta-a na área calculada acima e, em seguida, redimensiona-a novamente para o tamanho da exibição
-        image = image_resized.resize((zoom_width, zoom_height), Image.LANCZOS).crop((x_original, y_original, x_original + image_resized.width, y_original + image_resized.height)).resize((400, 400), Image.LANCZOS)
         image = image_resized.resize((zoom_width, zoom_height), Image.LANCZOS).crop((x_original, y_original, x_original + image_resized.width, y_original + image_resized.height)).resize((400, 400), Image.LANCZOS)
         # Atualiza o nível de zoom e a imagem redimensionada
         zoom_level = new_zoom_level
@@ -147,7 +124,6 @@ root.config(menu=menu_bar)
 def open_win(image):
    global image_label, image_tk, img_original
     
-   new = tk.Toplevel(root)
    new = tk.Toplevel(root)
    new.title("New Window")
    image_label = tk.Label(new)
