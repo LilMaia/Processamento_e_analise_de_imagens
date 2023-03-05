@@ -8,5 +8,4 @@ zoom_size = 300
 zoom_width = 0
 zoom_height = 0
 zoom_max = 10
-image_reduced = None
 img_original = None
