@@ -23,7 +23,7 @@ from PIL import Image, ImageTk
 from variaveis_globais import zoom_level, zoom_width, zoom_height, zoom_max, img_original
 
 # Função para abrir a imagem a partir de um arquivo
-def abrir_imagem():
+def abrir_imagem(root):
     # Abre uma janela para escolher o arquivo de imagem
     file_path = filedialog.askopenfilename(filetypes=[("PNG files", "*.png"), ("TIFF files", "*.tiff")])
     # Verifica se o arquivo foi escolhido
@@ -41,7 +41,7 @@ def abrir_imagem():
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
             img_original = image_resized.copy()
             # Atualiza o image label com o tamanho redimensionado
-            abrir_janela(image_resized)
+            abrir_janela(image_resized, root)
         except Exception as e:
             # Mostra um erro se houver falha na hora de abrir a imagem
             messagebox.showerror("Error", "Failed to open image: {}".format(e))
@@ -83,9 +83,8 @@ def ajustar_contraste(min_value, max_value):
         atualizar_imagem(img_resized2)
 
 # Função para dar zoom na imagem
-def aumentar_zoom():
-    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original, min_value, max_value
-    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original, min_value, max_value
+def aumentar_zoom(min_value, max_value):
+    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original
     # Calcula o novo nível de zoom
     new_zoom_level = zoom_level + 1
     # Verifica se o novo nível de zoom está dentro do limite máximo
@@ -106,22 +105,11 @@ def aumentar_zoom():
         image_resized = image
         # Atualiza a imagem com o novo tamanho
         atualizar_imagem(image)
-        if(min_value_slider.get() != 0 or max_value_slider.get() != 0) :
-            ajustar_contraste(min_value_slider.get(), max_value_slider.get())
-
-# Cria a janela principal e define o título
-root = tk.Tk()
-root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
-root.geometry("700x200")
-
-# Criando a barra de menus
-menu_bar = tk.Menu(root)
-
-# Setando o menu da janela principal
-root.config(menu=menu_bar)
+        if(min_value != 0 or max_value != 0) :
+            ajustar_contraste(min_value, max_value)
 
 # Cria o rótulo da imagem e adiciona ele à janela principal
-def abrir_janela(image):
+def abrir_janela(image, root):
    global image_label, image_tk, img_original
     
    new = tk.Toplevel(root)
@@ -135,44 +123,56 @@ def abrir_janela(image):
    image_tk = ImageTk.PhotoImage(image)
    image_label.config(image=image_tk)
    new.geometry(str(image.width) + "x" + str(image.height))
-   
-# Adicionando o menu "File" à barra de menus
-file_menu = tk.Menu(menu_bar, tearoff=0)
-file_menu.add_command(label="Fechar", command=root.quit)
 
-menu_bar.add_cascade(label="Opções", menu=file_menu)
+def main():
+    # Cria a janela principal e define o título
+    root = tk.Tk()
+    root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
+    window_width = 700
+    window_height = 200
 
-# Cria o botão "Abrir" e adiciona ele à janela principal
-open_button = tk.Button(root, text="Abrir imagem", command=abrir_imagem)
-open_button.pack()
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
 
-# Cria o botão "Zoom In" e adiciona ele à janela principal
-zoom_in_button = tk.Button(root, text="Aumentar Zoom", command=aumentar_zoom)
-zoom_in_button.pack()
+    x_cordinate = int((screen_width/2) - (window_width/2))
+    y_cordinate = int((screen_height/2) - (window_height/2))
 
-zoom_out_button = tk.Button(root, text="Retornar a proporção original", command=resetar_zoom)
-zoom_out_button.pack()
+    root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+    root.resizable(False, False)
 
-min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste")
-min_value_slider.pack()
-min_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
+    # Criando a barra de menus
+    menu_bar = tk.Menu(root)
+    root.config(menu=menu_bar)
 
-max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste")
-max_value_slider.pack()
-max_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
+    # Adicionando o menu "File" à barra de menus
+    file_menu = tk.Menu(menu_bar, tearoff=0)
+    file_menu.add_command(label="Fechar", command=root.quit)
+    menu_bar.add_cascade(label="Opções", menu=file_menu)
 
-root.resizable(False, False)
+    # Cria o botão "Abrir" e adiciona ele à janela principal
+    open_button = tk.Button(root, text="Abrir imagem", command=lambda: abrir_imagem(root))
+    open_button.pack()
 
-window_width = 700
-window_height = 200
+    # Cria o botão "Zoom In" e adiciona ele à janela principal
+    zoom_in_button = tk.Button(root, text="Aumentar Zoom", command=lambda: aumentar_zoom(min_value_slider.get(), max_value_slider.get()))
+    zoom_in_button.pack()
 
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+    # Cria o botão "Zoom Out" e adiciona ele à janela principal
+    zoom_out_button = tk.Button(root, text="Retornar a proporção original", command=resetar_zoom)
+    zoom_out_button.pack()
+    
+    # Cria o slider para ajustar o contraste mínimo
+    min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste", command= ajustar_contraste)
+    min_value_slider.pack()
+    min_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
 
-x_cordinate = int((screen_width/2) - (window_width/2))
-y_cordinate = int((screen_height/2) - (window_height/2))
+    # Cria o slider para ajustar o contraste máximo
+    max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste", command= ajustar_contraste)
+    max_value_slider.pack()
+    max_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
 
-root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
-
-#Inicia o lmainloop
-root.mainloop()
+    # Inicia o loop principal da janela
+    root.mainloop()
+    
+if __name__ == '__main__':
+    main()
