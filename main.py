@@ -20,7 +20,9 @@ from tkinter import filedialog, messagebox
 import cv2
 import numpy as np
 from PIL import Image, ImageTk
-from variaveis_globais import zoom_level, zoom_width, zoom_height, zoom_max, img_original
+
+zoom_level = 2
+zoom_size = 300
 
 # Função para abrir a imagem a partir de um arquivo
 def abrir_imagem(root):
@@ -83,7 +85,9 @@ def ajustar_contraste(min_value, max_value):
 
 # Função para dar zoom na imagem
 def aumentar_zoom(min_value, max_value):
-    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max
+    global image, image_resized, zoom_level
+    # Definindo o Zoom máximo
+    zoom_max = 10
     # Calcula o novo nível de zoom
     new_zoom_level = zoom_level + 1
     # Verifica se o novo nível de zoom está dentro do limite máximo
