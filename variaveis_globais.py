@@ -9,3 +9,4 @@ zoom_width = 0
 zoom_height = 0
 zoom_max = 10
 img_original = None
+image_resized = None

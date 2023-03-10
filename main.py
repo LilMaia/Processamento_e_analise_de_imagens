@@ -24,6 +24,7 @@ from variaveis_globais import zoom_level, zoom_width, zoom_height, zoom_max, img
 
 # Função para abrir a imagem a partir de um arquivo
 def abrir_imagem(root):
+    global image_resized, img_original
     # Abre uma janela para escolher o arquivo de imagem
     file_path = filedialog.askopenfilename(filetypes=[("PNG files", "*.png"), ("TIFF files", "*.tiff")])
     # Verifica se o arquivo foi escolhido
@@ -34,10 +35,8 @@ def abrir_imagem(root):
             # Converte a imagem para o formato RGB
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             # Cria um objeto Image do PIL a partir da matriz numpy
-            global image
             image = Image.fromarray(img)
             # Redimensiona e salva a imagem como variável global
-            global image_resized, img_original
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
             img_original = image_resized.copy()
             # Atualiza o image label com o tamanho redimensionado
@@ -58,7 +57,7 @@ def atualizar_imagem(image):
 
 # Função para resetar o zoom
 def resetar_zoom():
-    global image, image_resized, image_tk, zoom_level, img_original
+    global image_resized, zoom_level, img_original
     # Restaura a imagem original e redefine o nível de zoom
     image_resized = img_original.resize((400, 400), Image.LANCZOS)
     zoom_level = 0
@@ -67,7 +66,7 @@ def resetar_zoom():
 
 # Função que atualiza o contraste usando contraste por janelamento
 def ajustar_contraste(min_value, max_value):
-    global img_original, image_label, image_tk, image_resized
+    global img_original, image_resized
     # Verifica se a imagem original existe
     if img_original is not None:
         # Converte a imagem original para uma matriz numpy
@@ -84,7 +83,7 @@ def ajustar_contraste(min_value, max_value):
 
 # Função para dar zoom na imagem
 def aumentar_zoom(min_value, max_value):
-    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max, img_original
+    global image, image_resized, zoom_level, zoom_width, zoom_height, zoom_max
     # Calcula o novo nível de zoom
     new_zoom_level = zoom_level + 1
     # Verifica se o novo nível de zoom está dentro do limite máximo
@@ -110,18 +109,13 @@ def aumentar_zoom(min_value, max_value):
 
 # Cria o rótulo da imagem e adiciona ele à janela principal
 def abrir_janela(image, root):
-   global image_label, image_tk, img_original
-    
+   global image_label
    new = tk.Toplevel(root)
    new.title("Nova Imagem")
    image_label = tk.Label(new)
    image_label.pack()
    # Salva a imagem original se ela estiver sendo exibida
-   if img_original is None or img_original.size != image.size:
-      img_original = image.copy()
-   # Atualiza o image label com a nova imagem
-   image_tk = ImageTk.PhotoImage(image)
-   image_label.config(image=image_tk)
+   atualizar_imagem(image)
    new.geometry(str(image.width) + "x" + str(image.height))
 
 def main():
