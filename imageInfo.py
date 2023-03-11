@@ -9,7 +9,10 @@ Giulia Chiucchi - 662103
 """
 
 #Imports
-from interfaceMenu import interfaceMenu
-    
-if __name__ == '__main__':
-    interfaceMenu()
+from PIL import Image
+
+class ImageInfo:
+    def __init__(self):
+        self.image_tk : Image = None
+        self.image_resized : Image = None
+        self.img_original : Image  = None
