@@ -35,9 +35,7 @@ def interfaceMenu():
     image_label.pack()
 
     # Define as dimensões da janela e sua posição no centro da tela
-    x_cordinate = int((root.winfo_screenwidth() / 2) - (700 / 2)) # window_width
-    y_cordinate = int((root.winfo_screenheight() / 2) - (200 / 2)) # window_height
-    root.geometry(f"{700}x{200}+{x_cordinate}+{y_cordinate}")
+    root.geometry(f"{700}x{200}+{int((root.winfo_screenwidth() / 2) - (700 / 2))}+{int((root.winfo_screenheight() / 2) - (200 / 2))}")
     root.resizable(False, False)
 
     # Criando a barra de menus
