@@ -19,15 +19,9 @@ from tkinter import PhotoImage, filedialog, messagebox
 import cv2
 import numpy as np
 from PIL import Image, ImageTk
+from imageInfo import ImageInfo
 
 zoom_level = 2
-
-class ImageInfo:
-    def __init__(self):
-        self.image_tk : Image = None
-        self.image_resized : Image = None
-        self.img_original : Image  = None
-        self.image : Image = None
 
 # Função para abrir a imagem a partir de um arquivo
 def abrir_imagem(image_label, image_info):
