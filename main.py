@@ -46,6 +46,17 @@ def abrir_imagem(root):
         except Exception as e:
             # Mostra um erro se houver falha na hora de abrir a imagem
             messagebox.showerror("Error", "Failed to open image: {}".format(e))
+            
+# Cria o rótulo da imagem e adiciona ele à janela principal
+def abrir_janela(image, root):
+   global image_label
+   new = tk.Toplevel(root)
+   new.title("Nova Imagem")
+   image_label = tk.Label(new)
+   image_label.pack()
+   # Salva a imagem original se ela estiver sendo exibida
+   atualizar_imagem(image)
+   new.geometry(str(image.width) + "x" + str(image.height))
 
 # Função para atualizar o image label com uma imagem nova
 def atualizar_imagem(image):
@@ -65,23 +76,6 @@ def resetar_zoom():
     zoom_level = 0
     # Atualiza a imagem com o tamanho padrão
     atualizar_imagem(image_resized)
-
-# Função que atualiza o contraste usando contraste por janelamento
-def ajustar_contraste(min_value, max_value):
-    global img_original, image_resized
-    # Verifica se a imagem original existe
-    if img_original is not None:
-        # Converte a imagem original para uma matriz numpy
-        img_np = np.asarray(image_resized)
-        # Aplica o janelamento
-        img_janelado = np.clip(img_np, min_value, max_value)
-        # Normaliza a imagem
-        img_norm = cv2.normalize(img_janelado, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
-        img_new = Image.fromarray(img_norm)
-        # Redimensiona a nova imagem e atualiza o rótulo da imagem
-        img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
-        atualizar_imagem(img_resized2)
 
 # Função para dar zoom na imagem
 def aumentar_zoom(min_value, max_value):
@@ -108,19 +102,23 @@ def aumentar_zoom(min_value, max_value):
         image_resized = image
         # Atualiza a imagem com o novo tamanho
         atualizar_imagem(image)
-        if(min_value != 0 or max_value != 0) :
+        if min_value or max_value:
             ajustar_contraste(min_value, max_value)
-
-# Cria o rótulo da imagem e adiciona ele à janela principal
-def abrir_janela(image, root):
-   global image_label
-   new = tk.Toplevel(root)
-   new.title("Nova Imagem")
-   image_label = tk.Label(new)
-   image_label.pack()
-   # Salva a imagem original se ela estiver sendo exibida
-   atualizar_imagem(image)
-   new.geometry(str(image.width) + "x" + str(image.height))
+            
+# Função que atualiza o contraste usando contraste por janelamento
+def ajustar_contraste(min_value, max_value):
+    global img_original, image_resized
+    # Verifica se a imagem original existe
+    if img_original is not None:
+        # Aplica o janelamento diretamente na imagem redimensionada
+        img_janelado = np.clip(image_resized, min_value, max_value)
+        # Normaliza a imagem
+        img_norm = cv2.normalize(img_janelado, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+        # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
+        img_new = Image.fromarray(img_norm)
+        # Redimensiona a nova imagem e atualiza o rótulo da imagem
+        img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
+        atualizar_imagem(img_resized2)
 
 def main():
     # Cria a janela principal e define o título
