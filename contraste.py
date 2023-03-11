@@ -30,5 +30,5 @@ def ajustar_contraste(min_value, max_value, image_label, image_info):
         # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
         img_new = Image.fromarray(img_norm)
         # Redimensiona a nova imagem e atualiza o rótulo da imagem
-        img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
-        atualizar_imagem(img_resized2, image_label, image_info)
+        img_resized = img_new.resize((400, 400), Image.Resampling.LANCZOS)
+        atualizar_imagem(img_resized, image_label, image_info)
