@@ -20,4 +20,3 @@ class ImageInfo:
         self.image_tk : Image = None
         self.image_resized : Image = None
         self.img_original : Image  = None
-        self.image : Image = None
