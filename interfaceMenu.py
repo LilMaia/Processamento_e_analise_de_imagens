@@ -20,18 +20,18 @@ from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 
+image_info = ImageInfo()
+root = tk.Tk()
+
 def interfaceMenu():
-    #variaveis : 
-    
-    image_info = ImageInfo()
     
     # Cria a janela principal e define o título
-    root = tk.Tk()
     root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
     
-    new = tk.Toplevel(root)
-    new.title("Nova Imagem")
-    image_label = tk.Label(new)
+    # Cria a janela secundaria e define o título
+    janela = tk.Toplevel(root)
+    janela.title("Nova Imagem")
+    image_label = tk.Label(janela)
     image_label.pack()
 
     # Define as dimensões da janela e sua posição no centro da tela
@@ -62,14 +62,12 @@ def interfaceMenu():
     zoom_out_button.pack()
     
     # Cria o slider para ajustar o contraste mínimo
-    min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste", command= ajustar_contraste)
+    min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
     min_value_slider.pack()
-    min_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
 
     # Cria o slider para ajustar o contraste máximo
-    max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste", command= ajustar_contraste)
+    max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
     max_value_slider.pack()
-    max_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
 
     # Inicia o loop principal da janela
     root.mainloop()
