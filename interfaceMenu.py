@@ -56,11 +56,11 @@ def interfaceMenu():
     zoom_out_button.pack()
     
     # Cria o slider para ajustar o contraste mínimo
-    min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
+    min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aum. Contraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
     min_value_slider.pack()
 
     # Cria o slider para ajustar o contraste máximo
-    max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
+    max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Dim. Contraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
     max_value_slider.pack()
 
     # Inicia o loop principal da janela
