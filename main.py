@@ -124,16 +124,11 @@ def main():
     # Cria a janela principal e define o título
     root = tk.Tk()
     root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
-    window_width = 700
-    window_height = 200
 
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-
-    x_cordinate = int((screen_width/2) - (window_width/2))
-    y_cordinate = int((screen_height/2) - (window_height/2))
-
-    root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
+    # Define as dimensões da janela e sua posição no centro da tela
+    x_cordinate = int((root.winfo_screenwidth() / 2) - (700 / 2)) # window_width
+    y_cordinate = int((root.winfo_screenheight() / 2) - (200 / 2)) # window_height
+    root.geometry(f"{700}x{200}+{x_cordinate}+{y_cordinate}")
     root.resizable(False, False)
 
     # Criando a barra de menus
