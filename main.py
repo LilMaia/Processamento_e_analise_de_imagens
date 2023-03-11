@@ -21,13 +21,13 @@ import numpy as np
 from PIL import Image, ImageTk
 
 zoom_level = 2
-zoom_size = 300
 
 class ImageInfo:
     def __init__(self):
         self.image_tk : Image = None
         self.image_resized : Image = None
         self.img_original : Image  = None
+        self.image : Image = None
 
 # Função para abrir a imagem a partir de um arquivo
 def abrir_imagem(image_label, image_info):
@@ -70,7 +70,7 @@ def resetar_zoom(image_label, image_info):
 
 # Função para dar zoom na imagem
 def aumentar_zoom(min_value, max_value, image_label, image_info):
-    global image, zoom_level
+    global zoom_level
     # Definindo o Zoom máximo
     zoom_max = 10
     # Calcula o novo nível de zoom
@@ -87,12 +87,12 @@ def aumentar_zoom(min_value, max_value, image_label, image_info):
         x_original = int(x / (1 + new_zoom_level/10))
         y_original = int(y / (1 + new_zoom_level/10))
         # Redimensiona a imagem original com o novo tamanho, recorta-a na área calculada acima e, em seguida, redimensiona-a novamente para o tamanho da exibição
-        image = image_info.image_resized.resize((zoom_width, zoom_height), Image.LANCZOS).crop((x_original, y_original, x_original + image_info.image_resized.width, y_original + image_info.image_resized.height)).resize((400, 400), Image.LANCZOS)
+        image_info.image = image_info.image_resized.resize((zoom_width, zoom_height), Image.LANCZOS).crop((x_original, y_original, x_original + image_info.image_resized.width, y_original + image_info.image_resized.height)).resize((400, 400), Image.LANCZOS)
         # Atualiza o nível de zoom e a imagem redimensionada
         zoom_level = new_zoom_level
-        image_info.image_resized = image
+        image_info.image_resized = image_info.image
         # Atualiza a imagem com o novo tamanho
-        atualizar_imagem(image, image_label, image_info)
+        atualizar_imagem(image_info.image, image_label, image_info)
         if min_value or max_value:
             ajustar_contraste(min_value, max_value, image_label, image_info)
             
