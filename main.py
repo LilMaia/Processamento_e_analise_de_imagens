@@ -2,7 +2,6 @@
 Trabalho de Processamento e Análise de Imagens
 Curso: Ciência da Computação - Campus Coração Eucarístico
 Professor: Alexei Machado
-
 Alunos:
 Rafael Maia - 635921
 Jonathan Tavares - 540504
@@ -25,7 +24,7 @@ zoom_level = 2
 zoom_size = 300
 
 # Função para abrir a imagem a partir de um arquivo
-def abrir_imagem(root):
+def abrir_imagem(root, image_label):
     global image_resized, img_original
     # Abre uma janela para escolher o arquivo de imagem
     file_path = filedialog.askopenfilename(filetypes=[("PNG files", "*.png"), ("TIFF files", "*.tiff")])
@@ -42,25 +41,14 @@ def abrir_imagem(root):
             image_resized = image.resize((400, 400), Image.Resampling.LANCZOS)
             img_original = image_resized.copy()
             # Atualiza o image label com o tamanho redimensionado
-            abrir_janela(image_resized, root)
+            atualizar_imagem(image_resized, image_label)
         except Exception as e:
             # Mostra um erro se houver falha na hora de abrir a imagem
             messagebox.showerror("Error", "Failed to open image: {}".format(e))
-            
-# Cria o rótulo da imagem e adiciona ele à janela principal
-def abrir_janela(image, root):
-   global image_label
-   new = tk.Toplevel(root)
-   new.title("Nova Imagem")
-   image_label = tk.Label(new)
-   image_label.pack()
-   # Salva a imagem original se ela estiver sendo exibida
-   atualizar_imagem(image)
-   new.geometry(str(image.width) + "x" + str(image.height))
 
 # Função para atualizar o image label com uma imagem nova
-def atualizar_imagem(image):
-    global image_label, image_tk, img_original
+def atualizar_imagem(image,image_label):
+    global image_tk, img_original
     # Salva a imagem original se ela estiver sendo exibida
     if img_original is None or img_original.size != image.size:
         img_original = image.copy()
@@ -69,16 +57,16 @@ def atualizar_imagem(image):
     image_label.config(image=image_tk)
 
 # Função para resetar o zoom
-def resetar_zoom():
+def resetar_zoom(image_label):
     global image_resized, zoom_level, img_original
     # Restaura a imagem original e redefine o nível de zoom
     image_resized = img_original.resize((400, 400), Image.LANCZOS)
     zoom_level = 0
     # Atualiza a imagem com o tamanho padrão
-    atualizar_imagem(image_resized)
+    atualizar_imagem(image_resized,image_label)
 
 # Função para dar zoom na imagem
-def aumentar_zoom(min_value, max_value):
+def aumentar_zoom(min_value, max_value, image_label):
     global image, image_resized, zoom_level
     # Definindo o Zoom máximo
     zoom_max = 10
@@ -101,12 +89,12 @@ def aumentar_zoom(min_value, max_value):
         zoom_level = new_zoom_level
         image_resized = image
         # Atualiza a imagem com o novo tamanho
-        atualizar_imagem(image)
+        atualizar_imagem(image, image_label)
         if min_value or max_value:
-            ajustar_contraste(min_value, max_value)
+            ajustar_contraste(min_value, max_value, image_label)
             
 # Função que atualiza o contraste usando contraste por janelamento
-def ajustar_contraste(min_value, max_value):
+def ajustar_contraste(min_value, max_value, image_label):
     global img_original, image_resized
     # Verifica se a imagem original existe
     if img_original is not None:
@@ -118,12 +106,17 @@ def ajustar_contraste(min_value, max_value):
         img_new = Image.fromarray(img_norm)
         # Redimensiona a nova imagem e atualiza o rótulo da imagem
         img_resized2 = img_new.resize((400, 400), Image.Resampling.LANCZOS)
-        atualizar_imagem(img_resized2)
+        atualizar_imagem(img_resized2, image_label)
 
 def main():
     # Cria a janela principal e define o título
     root = tk.Tk()
     root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
+    
+    new = tk.Toplevel(root)
+    new.title("Nova Imagem")
+    image_label = tk.Label(new)
+    image_label.pack()
 
     # Define as dimensões da janela e sua posição no centro da tela
     x_cordinate = int((root.winfo_screenwidth() / 2) - (700 / 2)) # window_width
@@ -141,26 +134,26 @@ def main():
     menu_bar.add_cascade(label="Opções", menu=file_menu)
 
     # Cria o botão "Abrir" e adiciona ele à janela principal
-    open_button = tk.Button(root, text="Abrir imagem", command=lambda: abrir_imagem(root))
+    open_button = tk.Button(root, text="Abrir imagem", command=lambda: abrir_imagem(root, image_label))
     open_button.pack()
 
     # Cria o botão "Zoom In" e adiciona ele à janela principal
-    zoom_in_button = tk.Button(root, text="Aumentar Zoom", command=lambda: aumentar_zoom(min_value_slider.get(), max_value_slider.get()))
+    zoom_in_button = tk.Button(root, text="Aumentar Zoom", command=lambda: aumentar_zoom(min_value_slider.get(), max_value_slider.get(), image_label))
     zoom_in_button.pack()
 
     # Cria o botão "Zoom Out" e adiciona ele à janela principal
-    zoom_out_button = tk.Button(root, text="Retornar a proporção original", command=resetar_zoom)
+    zoom_out_button = tk.Button(root, text="Retornar a proporção original", command=lambda: resetar_zoom(image_label))
     zoom_out_button.pack()
     
     # Cria o slider para ajustar o contraste mínimo
     min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Diminuir Contraste", command= ajustar_contraste)
     min_value_slider.pack()
-    min_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
+    min_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label))
 
     # Cria o slider para ajustar o contraste máximo
     max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aumentar Constraste", command= ajustar_contraste)
     max_value_slider.pack()
-    max_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get()))
+    max_value_slider.config(command=lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label))
 
     # Inicia o loop principal da janela
     root.mainloop()
