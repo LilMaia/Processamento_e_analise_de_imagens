@@ -20,12 +20,12 @@ from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 
-image_info = ImageInfo()
-root = tk.Tk()
-
 def interfaceMenu():
-    
+    # Cria o objeto que conterá as imagens
+    image_info = ImageInfo()
+
     # Cria a janela principal e define o título
+    root = tk.Tk()
     root.title("Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
     
     # Cria a janela secundaria e define o título

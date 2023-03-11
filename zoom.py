@@ -17,6 +17,7 @@ from PIL import Image
 from imageUtils import atualizar_imagem
 from contraste import ajustar_contraste
 
+# Parâmetros
 zoom_level = 2
 
 # Função para resetar o zoom
