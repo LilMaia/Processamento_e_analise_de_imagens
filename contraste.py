@@ -7,10 +7,6 @@ Rafael Maia - 635921
 Jonathan Tavares - 540504
 Giulia Chiucchi - 662103
 """
-"""
-Arquivo: main.py
-Data da última alteração: 23/02/2023
-"""
 
 #Imports
 import numpy as np
