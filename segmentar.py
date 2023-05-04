@@ -40,6 +40,7 @@ def segmentar_mama(imagem, image_label):
 
     # Recorta a imagem para manter apenas a região da mama
     imagem.image_resized = breast
+    imagem.img_original = imagem.image_resized
     
     atualizar_imagem(imagem.image_resized, image_label, imagem)
     
