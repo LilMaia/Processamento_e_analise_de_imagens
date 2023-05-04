@@ -15,6 +15,7 @@ from imageInfo import ImageInfo
 from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
+from segmentar import segmentar_mama
 
 def interfaceMenu():
     # Cria o objeto que conterá as imagens
@@ -31,7 +32,7 @@ def interfaceMenu():
     image_label.pack()
 
     # Define as dimensões da janela e sua posição no centro da tela
-    root.geometry(f"{700}x{200}+{int((root.winfo_screenwidth() / 2) - (700 / 2))}+{int((root.winfo_screenheight() / 2) - (200 / 2))}")
+    root.geometry(f"{600}x{300}+{int((root.winfo_screenwidth() / 2) - (600 / 2))}+{int((root.winfo_screenheight() / 2) - (300 / 2))}")
     root.resizable(False, False)
 
     # Criando a barra de menus
@@ -52,7 +53,7 @@ def interfaceMenu():
     zoom_in_button.pack()
 
     # Cria o botão "Zoom Out" e adiciona ele à janela principal
-    zoom_out_button = tk.Button(root, text="Retornar a proporção original", command=lambda: resetar_zoom(image_label, image_info))
+    zoom_out_button = tk.Button(root, text="Retornar a imagem original", command=lambda: resetar_zoom(image_label, image_info))
     zoom_out_button.pack()
     
     # Cria o slider para ajustar o contraste mínimo
@@ -62,6 +63,10 @@ def interfaceMenu():
     # Cria o slider para ajustar o contraste máximo
     max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Dim. Contraste", command= lambda val: ajustar_contraste(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
     max_value_slider.pack()
+    
+    # Cria o botão "Segmentar" e adiciona ele à janela principal
+    segmentar_button = tk.Button(root, text="Segmentar", command= lambda: segmentar_mama(image_info, image_label, min_value_slider.get(), max_value_slider.get()))
+    segmentar_button.pack()
 
     # Inicia o loop principal da janela
     root.mainloop()
