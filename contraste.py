@@ -27,4 +27,5 @@ def ajustar_contraste(min_value, max_value, image_label, image_info):
         img_new = Image.fromarray(img_norm)
         # Redimensiona a nova imagem e atualiza o rótulo da imagem
         img_resized = img_new.resize((400, 400), Image.Resampling.LANCZOS)
+        image_info.image_resized = img_resized # isso ta dando problema quando for ajustar o contraste dnv
         atualizar_imagem(img_resized, image_label, image_info)

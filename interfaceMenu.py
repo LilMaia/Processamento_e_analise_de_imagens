@@ -49,7 +49,7 @@ def interfaceMenu():
     open_button.pack()
 
     # Cria o botão "Zoom In" e adiciona ele à janela principal
-    zoom_in_button = tk.Button(root, text="Aumentar Zoom", command= lambda: aumentar_zoom(min_value_slider.get(), max_value_slider.get(), image_label, image_info))
+    zoom_in_button = tk.Button(root, text="Aumentar Zoom", command= lambda: aumentar_zoom(image_label, image_info))
     zoom_in_button.pack()
 
     # Cria o botão "Zoom Out" e adiciona ele à janela principal
@@ -65,7 +65,7 @@ def interfaceMenu():
     max_value_slider.pack()
     
     # Cria o botão "Segmentar" e adiciona ele à janela principal
-    segmentar_button = tk.Button(root, text="Segmentar", command= lambda: segmentar_mama(image_info, image_label, min_value_slider.get(), max_value_slider.get()))
+    segmentar_button = tk.Button(root, text="Segmentar", command= lambda: segmentar_mama(image_info, image_label))
     segmentar_button.pack()
 
     # Inicia o loop principal da janela

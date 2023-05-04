@@ -26,7 +26,7 @@ def resetar_zoom(image_label, image_info):
     atualizar_imagem(image_info.image_resized,image_label, image_info)
 
 # Função para dar zoom na imagem
-def aumentar_zoom(min_value, max_value, image_label, image_info):
+def aumentar_zoom(image_label, image_info):
     global zoom_level
     # Definindo o Zoom máximo
     zoom_max = 10
@@ -49,5 +49,4 @@ def aumentar_zoom(min_value, max_value, image_label, image_info):
         zoom_level = new_zoom_level
         # Atualiza a imagem com o novo tamanho
         atualizar_imagem(image_info.image_resized, image_label, image_info)
-        if min_value or max_value:
-            ajustar_contraste(min_value, max_value, image_label, image_info)
+        
