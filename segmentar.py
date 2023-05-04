@@ -1,7 +1,6 @@
-from PIL import Image, ImageFilter, ImageDraw, ImageOps
+from PIL import Image
 from imageUtils import atualizar_imagem
 from skimage import filters, measure
-from contraste import ajustar_contraste
 
 import numpy as np
 
@@ -11,7 +10,7 @@ def segmentar_mama(imagem, image_label):
 
     img = np.array(imagem_cinza)
 
-    blurred = filters.gaussian(img, sigma=2)
+    blurred = filters.gaussian(img, sigma=8)
 
     # limiarizou a imagem
     thresh = filters.threshold_otsu(blurred)
