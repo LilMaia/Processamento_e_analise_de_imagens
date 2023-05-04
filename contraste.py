@@ -20,7 +20,7 @@ def ajustar_contraste(min_value, max_value, image_label, image_info):
     # Verifica se a imagem original existe
     if image_info.img_original is not None:
         # Aplica o janelamento diretamente na imagem redimensionada
-        img_janelado = np.clip(image_info.image_resized, min_value, max_value)
+        img_janelado = np.clip(image_info.img_original, min_value, max_value)
         # Normaliza a imagem
         img_norm = cv2.normalize(img_janelado, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
         # Cria uma nova imagem a partir da matriz numpy com contraste ajustado
