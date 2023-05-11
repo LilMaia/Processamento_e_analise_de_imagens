@@ -1,22 +1,16 @@
 import os
-import numpy as np
-import sklearn.metrics as metrics
+import tensorflow as tf
 from armazenamento import salvar_população, carregar_população
-from PIL import Image
+import PIL
 from modelo import criar_modelo
-from numpy import asarray
+import shutil
 
 def treino():
     
     #armazenando caminho dos diretorios
-    diretorio_treino = "../mamografias_treino2/" 
-    diretorio_teste = "../mamografias/"
-    
-    #armazenando as imagens de treino e teste e suas labels
-    x_treino = []
-    y_treino = []
-    x_teste = []
-    y_teste = []
+    diretorio_imagens = "../mamografias/"
+    diretorio_treino = "../mamografias_treino/" 
+    diretorio_teste = "../mamografias_teste/"
     
     #modelo
     modelo = None
@@ -35,47 +29,43 @@ def treino():
         print(f"Arquivo {nome_do_arquivo} não encontrado. Iniciando o modelo.")
         modelo = criar_modelo(pesos=None)
 
-    # carregando as imagens de treino e suas labels
-    for nome_arquivo in os.listdir(diretorio_treino):
-        if nome_arquivo.endswith(".png"):
-            # Carregar imagem
-            imagem = Image.open(os.path.join(diretorio_treino, nome_arquivo))
-            imagem_array = asarray(imagem)  # Converter imagem para array NumPy
-            x_treino.append(imagem_array)
-
-            # Adicionar nome do arquivo a y_treino
-            y_treino.append(nome_arquivo)
-
     # carregando as imagens de teste e suas labels
     arquivos = os.listdir(diretorio_teste) 
     for i, nome_arquivo in enumerate(arquivos, start=1):
         if i % 4 == 1 and nome_arquivo.endswith(".png"):
-            # Carregar imagem
-            imagem = Image.open(os.path.join(diretorio_teste, nome_arquivo))
-            imagem_array = asarray(imagem)  # Converter imagem para array NumPy
-            x_teste.append(imagem_array)
-
-            # Adicionar nome do arquivo a y_teste
-            y_teste.append(nome_arquivo)
+            caminho_origem = os.path.join(diretorio_imagens, nome_arquivo)
+            caminho_destino = os.path.join(diretorio_teste, nome_arquivo)
+            shutil.copy(caminho_origem, caminho_destino)
             
-    # Converter as listas em arrays NumPy
-    x_treino = np.array(x_treino)
-    y_treino = np.array(y_treino)
-    x_teste = np.array(x_teste)
-    y_teste = np.array(y_teste)
-  
+    dados_treino = tf.keras.preprocessing.image_dataset_from_directory(
+        diretorio_treino,
+        labels="inferred",
+        label_mode="int",
+        color_mode="rgb",
+        batch_size=32,
+        image_size=(28, 28),
+        shuffle=True,
+        seed=42
+    )
+    
+    dados_teste = tf.keras.preprocessing.image_dataset_from_directory(
+        diretorio_teste,
+        labels="inferred",
+        label_mode="int",
+        color_mode="rgb",
+        batch_size=32,
+        image_size=(28, 28),
+        shuffle=True,
+        seed=42
+    )
+    
     #treinando o modelo
-    modelo.fit(x_treino, y_treino, batch_size=128, epochs=5, verbose=1, validation_data=(x_teste, y_teste))
+    modelo.fit(dados_treino, batch_size=128, epochs=5, verbose=1, validation_data=dados_teste)
     
     #salve os pesos da população
     salvar_população(modelo, nome_do_arquivo)
     
-    #classifica as imagens
-    classificacao = modelo.predict_classes(x_teste, verbose=1)
-    
-    #crie uma matriz de confusão
-    matriz_de_confusao = metrics.confusion_matrix(y_teste, classificacao)
-    
-    print(matriz_de_confusao)
-    
-    
+    # Avaliar o desempenho da rede neural
+    loss, accuracy = modelo.evaluate(dados_teste)
+    print("Loss:", loss)
+    print("Accuracy:", accuracy)
