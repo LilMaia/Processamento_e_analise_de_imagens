@@ -2,26 +2,38 @@ import os
 import sklearn.metrics as metrics
 from armazenamento import salvar_população, carregar_população
 from PIL import Image
+from modelo import criar_modelo
 
-def treino(modelo, nome_do_arquivo):
+def treino():
     
+    #armazenando caminho dos diretorios
     diretorio_treino = "../mamografias_treino2/" 
     diretorio_teste = "../mamografias/"
     
+    #armazenando as imagens de treino e teste e suas labels
     x_treino = []
     y_treino = []
     x_teste = []
     y_teste = []
+    
+    #modelo
+    modelo
+    
+    #nome_do_arquivo
+    nome_do_arquivo = "pesos.h5"
 
+    #caso já exista pesos treinados, carregamos eles
     try:
         # Tenta carregar os pesos de um arquivo
         pesos_da_população = carregar_população(nome_do_arquivo)
-        print(f"População carregada de {nome_do_arquivo}")
+        print(f"Pesos carregados de {nome_do_arquivo}")
+        modelo = criar_modelo(pesos_da_população)
     except FileNotFoundError:
         # Se o arquivo não existe
         print(f"Arquivo {nome_do_arquivo} não encontrado. Iniciando o modelo.")
-        
+        modelo = criar_modelo(pesos=None)
 
+    #carregando as imagens de treino e suas labels
     for nome_arquivo in os.listdir(diretorio_treino):
         if nome_arquivo.endswith(".png"):
             # Carregar imagem
@@ -31,8 +43,9 @@ def treino(modelo, nome_do_arquivo):
             # Adicionar nome do arquivo a y_treino
             y_treino.append(nome_arquivo)
 
-    arquivos = os.listdir(diretorio_teste)
 
+    #carregando as imagens de treino e suas labels
+    arquivos = os.listdir(diretorio_teste) 
     for i, nome_arquivo in enumerate(arquivos, start=1):
         if i % 4 == 1 and nome_arquivo.endswith(".png"):
             # Carregar imagem
@@ -47,10 +60,13 @@ def treino(modelo, nome_do_arquivo):
     
     #salve os pesos da população
     salvar_população(modelo, nome_do_arquivo)
-    #classifique as imagens
+    
+    #classifica as imagens
     classificacao = modelo.predict_classes(x_teste, verbose=1)
+    
     #crie uma matriz de confusão
     matriz_de_confusao = metrics.confusion_matrix(y_teste, classificacao)
-    #faça o import do confusion_matrix
+    
+    print(matriz_de_confusao)
     
     
