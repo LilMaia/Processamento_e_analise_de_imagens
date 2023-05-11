@@ -17,7 +17,7 @@ def treino():
     y_teste = []
     
     #modelo
-    modelo
+    modelo = None
     
     #nome_do_arquivo
     nome_do_arquivo = "pesos.h5"
