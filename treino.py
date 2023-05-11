@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import sklearn.metrics as metrics
 from armazenamento import salvar_população, carregar_população
 from PIL import Image
@@ -56,6 +57,12 @@ def treino():
 
             # Adicionar nome do arquivo a y_teste
             y_teste.append(nome_arquivo)
+            
+    # Converter as listas em arrays NumPy
+    x_treino = np.array(x_treino)
+    y_treino = np.array(y_treino)
+    x_teste = np.array(x_teste)
+    y_teste = np.array(y_teste)
   
     #treinando o modelo
     modelo.fit(x_treino, y_treino, batch_size=128, epochs=5, verbose=1, validation_data=(x_teste, y_teste))
