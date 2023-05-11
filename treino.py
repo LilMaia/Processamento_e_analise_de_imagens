@@ -3,6 +3,7 @@ import sklearn.metrics as metrics
 from armazenamento import salvar_população, carregar_população
 from PIL import Image
 from modelo import criar_modelo
+from numpy import asarray
 
 def treino():
     
@@ -33,28 +34,29 @@ def treino():
         print(f"Arquivo {nome_do_arquivo} não encontrado. Iniciando o modelo.")
         modelo = criar_modelo(pesos=None)
 
-    #carregando as imagens de treino e suas labels
+    # carregando as imagens de treino e suas labels
     for nome_arquivo in os.listdir(diretorio_treino):
         if nome_arquivo.endswith(".png"):
             # Carregar imagem
             imagem = Image.open(os.path.join(diretorio_treino, nome_arquivo))
-            x_treino.append(imagem)
+            imagem_array = asarray(imagem)  # Converter imagem para array NumPy
+            x_treino.append(imagem_array)
 
             # Adicionar nome do arquivo a y_treino
             y_treino.append(nome_arquivo)
 
-
-    #carregando as imagens de treino e suas labels
+    # carregando as imagens de teste e suas labels
     arquivos = os.listdir(diretorio_teste) 
     for i, nome_arquivo in enumerate(arquivos, start=1):
         if i % 4 == 1 and nome_arquivo.endswith(".png"):
             # Carregar imagem
             imagem = Image.open(os.path.join(diretorio_teste, nome_arquivo))
-            x_teste.append(imagem)
+            imagem_array = asarray(imagem)  # Converter imagem para array NumPy
+            x_teste.append(imagem_array)
 
-            # Adicionar nome do arquivo a yteste
+            # Adicionar nome do arquivo a y_teste
             y_teste.append(nome_arquivo)
-    
+  
     #treinando o modelo
     modelo.fit(x_treino, y_treino, batch_size=128, epochs=5, verbose=1, validation_data=(x_teste, y_teste))
     
