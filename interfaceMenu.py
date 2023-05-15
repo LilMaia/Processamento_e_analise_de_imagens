@@ -17,6 +17,7 @@ from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 from segmentar import segmentar_mama
 from treino import generateTrainImages
+from modelo import train_model
 
 
 def interfaceMenu():
@@ -82,6 +83,10 @@ def interfaceMenu():
     generate_images_button = tk.Button(
         root, text="Gerar imagens de treinio", command=lambda: generateTrainImages())
     generate_images_button.pack()
+
+    instance_model_button = tk.Button(
+        root, text="Treinar modelo", command=lambda: train_model())
+    instance_model_button.pack()
 
     # Inicia o loop principal da janela
     root.mainloop()

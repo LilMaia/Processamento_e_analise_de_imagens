@@ -3,7 +3,7 @@ import os
 import re
 
 input_folder = "../mamografias/"
-output_folder = "../mamografias_treino2/"
+output_folder = "../mamografias_treino/"
 
 
 def generateTrainImages():
