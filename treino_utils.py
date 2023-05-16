@@ -16,7 +16,7 @@ def pegar_imagens_e_labels(data, labels):
         image = cv2.imread(os.path.join("../mamografias_treino/", imagePath))
         if image is None or image.size == 0:
             continue
-        image = cv2.resize(image, (600, 600))
+        image = cv2.resize(image, (200, 200))
         image = img_to_array(image)
         data.append(image)
 

@@ -4,7 +4,7 @@ from tensorflow.keras.applications import DenseNet121
 from tensorflow.keras.models import Model
 
 def densenet121_model():
-    inputs = tensorflow.keras.Input(shape=(600, 600, 3))
+    inputs = tensorflow.keras.Input(shape=(200, 200, 3))
     model_d = DenseNet121(weights=None,
                           include_top=False,
                           input_tensor=inputs)
