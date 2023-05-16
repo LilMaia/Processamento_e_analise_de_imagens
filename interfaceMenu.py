@@ -16,8 +16,8 @@ from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 from segmentar import segmentar_mama
-from treino import generateTrainImages
-from modelo import train_model
+from treino_utils import generateTrainImages
+from treino import train_model
 
 
 def interfaceMenu():
