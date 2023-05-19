@@ -10,9 +10,8 @@ def densenet121_model():
                           input_tensor=inputs)
 
     x = model_d(inputs)
-
-    x = GlobalAveragePooling2D()(x)
-    x = Dropout(0.5)(x)
+    # x = GlobalAveragePooling2D()(x) //averiguar
+    # x = Dropout(0.5)(x) //averiguar
     x = Dense(1024, activation='relu')(x)
     x = Dense(512, activation='relu')(x)
     x = Dropout(0.5)(x)

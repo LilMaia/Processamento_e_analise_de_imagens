@@ -19,8 +19,8 @@ def train_model():
 
     checkpoint = ModelCheckpoint('model.h5', verbose=1, save_best_only=True)
 
-    model.fit(xtrain, ytrain, batch_size=128,
-                        steps_per_epoch=xtrain.shape[0] // 128,
+    model.fit(xtrain, ytrain, batch_size=181,
+                        steps_per_epoch=xtrain.shape[0] // 181,
                         epochs=50,
                         verbose=2,
                         callbacks=[checkpoint],
