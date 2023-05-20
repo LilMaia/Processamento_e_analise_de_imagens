@@ -5,9 +5,26 @@ import numpy as np
 import cv2
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.preprocessing.image import img_to_array
+from sklearn.model_selection import train_test_split
 
 input_folder = "../mamografias/"
 output_folder = "../mamografias_treino/"
+
+def split_data(data, labels):
+    train_indices = []
+    test_indices = []
+    for i in range(len(data)):
+        if (i+1) % 4 == 0:
+            test_indices.append(i)
+        else:
+            train_indices.append(i)
+    
+    xtrain = data[train_indices]
+    xtest = data[test_indices]
+    ytrain = labels[train_indices]
+    ytest = labels[test_indices]
+    
+    return xtrain, xtest, ytrain, ytest
 
 def pegar_imagens_e_labels(data, labels):
     imagePaths = sorted(os.listdir("../mamografias_treino/"))

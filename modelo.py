@@ -5,15 +5,19 @@ from tensorflow.keras.models import Model
 
 def densenet121_model():
     inputs = tensorflow.keras.Input(shape=(200, 200, 3))
-    model_d = DenseNet121(weights=None,
+    base_model = DenseNet121(weights='imagenet',
                           include_top=False,
                           input_tensor=inputs)
+    
+    for layer in base_model.layers:
+        if not isinstance(layer, Dense):
+            layer.trainable = False
 
-    x = model_d(inputs)
-    # x = GlobalAveragePooling2D()(x) //averiguar
-    # x = Dropout(0.5)(x) //averiguar
+    x = base_model(inputs)
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(2048, activation='relu')(x)
+    x = Dropout(0.5)(x)
     x = Dense(1024, activation='relu')(x)
-    x = Dense(512, activation='relu')(x)
     x = Dropout(0.5)(x)
 
     preds = Dense(4, activation='softmax')(x)
