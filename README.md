@@ -6,7 +6,6 @@ Este repositório contém o código do Trabalho Prático de Processamento e Aná
 O trabalho foi desenvolvido pelos seguintes alunos:
 
 - Rafael Maia - 635921, Coração Eucarístico
-- Jonathan Tavares - 540504, Coração Eucarístico
 - Giulia Chiucchi - 662103, Coração Eucarístico
 
 ## Descrição
