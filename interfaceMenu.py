@@ -12,6 +12,7 @@ Giulia Chiucchi - 662103
 import tkinter as tk
 
 from imageInfo import ImageInfo
+from resultsInfo import BinaryClassification, MultiClassification
 from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
@@ -24,6 +25,8 @@ from classificação import classify_image
 def interfaceMenu():
     # Cria o objeto que conterá as imagens
     image_info = ImageInfo()
+    binary_classification = BinaryClassification()
+    multi_classification = MultiClassification()
 
     # Cria a janela principal e define o título
     root = tk.Tk()
@@ -35,6 +38,10 @@ def interfaceMenu():
     janela.title("Nova Imagem")
     image_label = tk.Label(janela)
     image_label.pack()
+
+    result_label = tk.Label(
+        janela, text="")
+    result_label.pack()
 
     # Define as dimensões da janela e sua posição no centro da tela
     root.geometry(
@@ -52,7 +59,7 @@ def interfaceMenu():
 
     # Cria o botão "Abrir" e adiciona ele à janela principal
     open_button = tk.Button(root, text="Abrir imagem",
-                            command=lambda: abrir_imagem(image_label, image_info))
+                            command=lambda: abrir_imagem(image_label, image_info, result_label))
     open_button.pack()
 
     # Cria o botão "Zoom In" e adiciona ele à janela principal
@@ -88,9 +95,9 @@ def interfaceMenu():
     instance_model_button = tk.Button(
         root, text="Treinar modelo", command=lambda: train_model())
     instance_model_button.pack()
-    
+
     instance_model_button = tk.Button(
-        root, text="Classificar imagem", command=lambda: classify_image(image_info))
+        root, text="Classificar imagem", command=lambda: classify_image(image_info, multi_classification, result_label))
     instance_model_button.pack()
 
     # Inicia o loop principal da janela
