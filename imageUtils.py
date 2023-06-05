@@ -4,7 +4,6 @@ Curso: Ciência da Computação - Campus Coração Eucarístico
 Professor: Alexei Machado
 Alunos:
 Rafael Maia - 635921
-Jonathan Tavares - 540504
 Giulia Chiucchi - 662103
 """
 
@@ -51,4 +50,5 @@ def atualizar_imagem(image, image_label, image_info, result_label):
     # Atualiza o image label com a nova imagem
     image_info.image_tk = ImageTk.PhotoImage(image)
     image_label.config(image=image_info.image_tk)
+    # esvazia o label de resultados
     result_label.config(text="")

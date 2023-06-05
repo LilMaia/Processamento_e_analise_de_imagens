@@ -4,7 +4,6 @@ Curso: Ciência da Computação - Campus Coração Eucarístico
 Professor: Alexei Machado
 Alunos:
 Rafael Maia - 635921
-Jonathan Tavares - 540504
 Giulia Chiucchi - 662103
 """
 
@@ -33,7 +32,7 @@ def interfaceMenu():
     root.title(
         "Trabalho de Processamento e Análise de Imagens - Ciência da Computação - 2023/1")
 
-    # Cria a janela secundaria e define o título
+    # Cria a janela secundaria para exibir a imagem
     janela = tk.Toplevel(root)
     janela.title("Nova Imagem")
     image_label = tk.Label(janela)
@@ -64,7 +63,7 @@ def interfaceMenu():
 
     # Cria o botão "Zoom In" e adiciona ele à janela principal
     zoom_in_button = tk.Button(
-        root, text="Aumentar Zoom", command=lambda: aumentar_zoom(image_label, image_info))
+        root, text="Aumentar Zoom", command=lambda: aumentar_zoom(image_label, image_info, result_label))
     zoom_in_button.pack()
 
     # Cria o botão "Zoom Out" e adiciona ele à janela principal
@@ -74,22 +73,22 @@ def interfaceMenu():
 
     # Cria o slider para ajustar o contraste mínimo
     min_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Aum. Contraste", command=lambda val: ajustar_contraste(
-        min_value_slider.get(), max_value_slider.get(), image_label, image_info))
+        min_value_slider.get(), max_value_slider.get(), image_label, image_info, result_label))
     min_value_slider.pack()
 
     # Cria o slider para ajustar o contraste máximo
     max_value_slider = tk.Scale(root, from_=0, to=255, orient="horizontal", label="Dim. Contraste", command=lambda val: ajustar_contraste(
-        min_value_slider.get(), max_value_slider.get(), image_label, image_info))
+        min_value_slider.get(), max_value_slider.get(), image_label, image_info, result_label))
     max_value_slider.pack()
 
     # Cria o botão "Segmentar" e adiciona ele à janela principal
     segmentar_button = tk.Button(
-        root, text="Segmentar", command=lambda: segmentar_mama(image_info, image_label))
+        root, text="Segmentar", command=lambda: segmentar_mama(image_info, image_label, result_label))
     segmentar_button.pack()
 
     # Cria o botão de treino e o adiciona à janela principal
     generate_images_button = tk.Button(
-        root, text="Gerar imagens de treinio", command=lambda: generateTrainImages())
+        root, text="Gerar imagens de treino", command=lambda: generateTrainImages())
     generate_images_button.pack()
 
     instance_model_button = tk.Button(

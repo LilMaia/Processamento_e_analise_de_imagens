@@ -1,3 +1,13 @@
+"""
+Trabalho de Processamento e Análise de Imagens
+Curso: Ciência da Computação - Campus Coração Eucarístico
+Professor: Alexei Machado
+Alunos:
+Rafael Maia - 635921
+Giulia Chiucchi - 662103
+"""
+
+# imports
 from PIL import Image, ImageOps
 import os
 import re
@@ -10,6 +20,9 @@ from sklearn.model_selection import train_test_split
 input_folder = "../mamografias/"
 output_folder = "../mamografias_treino/"
 
+# função para separar as imagens em treino e teste, sendo as imagens de teste 1/4 do total
+
+
 def split_data(data, labels):
     train_indices = []
     test_indices = []
@@ -18,14 +31,16 @@ def split_data(data, labels):
             test_indices.append(i)
         else:
             train_indices.append(i)
-    
+
     xtrain = data[train_indices]
     xtest = data[test_indices]
     ytrain = labels[train_indices]
     ytest = labels[test_indices]
-    
+
     return xtrain, xtest, ytrain, ytest
 
+
+# função para pegar as imagens e os labels para treino
 def pegar_imagens_e_labels(data, labels):
     imagePaths = sorted(os.listdir("../mamografias_treino/"))
 
@@ -44,9 +59,11 @@ def pegar_imagens_e_labels(data, labels):
     labels = np.array(labels)
     mlb = LabelBinarizer()
     labels = mlb.fit_transform(labels)
-    
+
     return data, labels
 
+
+# função para gerar novas imagens a partir das imagens de treino
 def generateTrainImages():
     for filename in os.listdir(input_folder):
         if os.path.isdir(os.path.join(input_folder, filename)):

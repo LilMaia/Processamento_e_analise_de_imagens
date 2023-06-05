@@ -1,14 +1,25 @@
+"""
+Trabalho de Processamento e Análise de Imagens
+Curso: Ciência da Computação - Campus Coração Eucarístico
+Professor: Alexei Machado
+Alunos:
+Rafael Maia - 635921
+Giulia Chiucchi - 662103
+"""
+
+# imports
 import tensorflow
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D,  Dropout
 from tensorflow.keras.applications import DenseNet121
 from tensorflow.keras.models import Model
 
+
 def densenet121_model():
     inputs = tensorflow.keras.Input(shape=(200, 200, 3))
     base_model = DenseNet121(weights='imagenet',
-                          include_top=False,
-                          input_tensor=inputs)
-    
+                             include_top=False,
+                             input_tensor=inputs)
+
     for layer in base_model.layers:
         if not isinstance(layer, Dense):
             layer.trainable = False
@@ -22,7 +33,7 @@ def densenet121_model():
 
     preds = Dense(4, activation='softmax')(x)
     model = Model(inputs=inputs, outputs=preds)
-    #model.summary()
-    print(F"Total de pesos : {Model.count_params(model)}")
+    # model.summary()
+    # print(F"Total de pesos : {Model.count_params(model)}")
 
     return model
