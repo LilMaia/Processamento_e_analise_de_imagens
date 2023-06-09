@@ -18,7 +18,7 @@ from contraste import ajustar_contraste
 from segmentar import segmentar_mama
 from treino_utils import generateTrainImages
 from treino import train_model
-from classificação import classify_image
+from classificação_4_classes import classify_image
 
 
 def interfaceMenu():
@@ -96,7 +96,7 @@ def interfaceMenu():
     instance_model_button.pack()
 
     instance_model_button = tk.Button(
-        root, text="Classificar imagem", command=lambda: classify_image(image_info, multi_classification, result_label))
+        root, text="Classificar imagem", command=lambda: classify_image())
     instance_model_button.pack()
 
     # Inicia o loop principal da janela
