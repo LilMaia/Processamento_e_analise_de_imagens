@@ -26,9 +26,9 @@ def densenet121_model():
 
     x = base_model(inputs)
     x = GlobalAveragePooling2D()(x)
-    x = Dense(4096, activation='relu')(x)
-    x = Dropout(0.5)(x)
-    x = Dense(2048, activation='relu')(x)
+    x = Dense(1024, activation='relu')(x)
+    x = Dropout(0.25)(x)
+    x = Dense(512, activation='relu')(x)
     x = Dropout(0.5)(x)
 
     preds = Dense(4, activation='softmax')(x)
