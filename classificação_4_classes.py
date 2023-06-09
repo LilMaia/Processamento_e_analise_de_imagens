@@ -46,15 +46,13 @@ def classify_image():
     predictions_binary = np.where(predictions <= 2, 0, 1)
 
     # Reorganiza as classes do ytest para a mesma representação (I+II = 0, III+IV = 1)
-    lb = LabelBinarizer()
-    ytest_binary = lb.fit_transform(ytest)
-    ytest_binary = np.where(ytest_binary <= 2, 0, 1)
+    ytest_binary = np.where(ytest <= 2, 0, 1)
 
     # Calcula as métricas
     accuracy = accuracy_score(ytest_binary, predictions_binary)
-    precision = precision_score(ytest_binary, predictions_binary)
-    recall = recall_score(ytest_binary, predictions_binary)
-    f1 = f1_score(ytest_binary, predictions_binary)
+    precision = precision_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
+    recall = recall_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
+    f1 = f1_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
 
     # Fim da contagem do tempo de execução
     end_time = time.time()
