@@ -78,20 +78,16 @@ def classify_image():
     # Calcula a matriz de confusão
     confusion_mat = confusion_matrix(ytest_classes, predictions_classes)
 
-    # Calcula as métricas
-    accuracy = accuracy_score(ytest_classes, predictions_classes)
-    sensitivity = np.diag(confusion_mat) / np.sum(confusion_mat, axis=1)
-    specificity = 1 - np.sum(confusion_mat - np.diag(np.diag(confusion_mat))) / np.sum(confusion_mat)
 
-    # Fim da contagem do tempo de execução
-    end_time = time.time()
 
-    # Calcula o tempo de execução em segundos
-    execution_time = end_time - start_time
 
     accuracy = np.sum(np.diag(confusion_mat)) / 1256
     sensitivity_mean = np.mean(np.diag(confusion_mat) / np.sum(confusion_mat, axis=1))
     specificity_mean = 1 - np.sum(confusion_mat - np.diag(np.diag(confusion_mat))) / 3768
+    # Fim da contagem do tempo de execução
+    end_time = time.time()
+    # Calcula o tempo de execução em segundos
+    execution_time = end_time - start_time
     print("Execution Time:", execution_time, "seconds")
     
     # Criação da tela
@@ -119,8 +115,8 @@ def classify_image():
     # Exibição das métricas da classificação de 4 classes
     axes[1, 1].axis('off')
     axes[1, 1].text(0, 0.8, f"Accuracy 4-Class: {accuracy}", fontsize=12)
-    axes[1, 1].text(0, 0.6, f"Sensitivity (Mean): {np.mean(sensitivity)}", fontsize=12)
-    axes[1, 1].text(0, 0.4, f"Specificity (Mean): {specificity}", fontsize=12)
+    axes[1, 1].text(0, 0.6, f"Sensitivity (Mean): {np.mean(sensitivity_mean)}", fontsize=12)
+    axes[1, 1].text(0, 0.4, f"Specificity (Mean): {specificity_mean}", fontsize=12)
     axes[1, 1].text(0, 0, f"Execution Time: {execution_time} seconds", fontsize=12)
 
     plt.tight_layout()
