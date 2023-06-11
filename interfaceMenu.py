@@ -18,7 +18,8 @@ from contraste import ajustar_contraste
 from segmentar import segmentar_mama
 from treino_utils import generateTrainImages
 from treino import train_model
-from classificação_4_classes import classify_image
+from classificação_binaria import binary_classify_image
+from classificação import classify_image
 
 
 def interfaceMenu():
@@ -44,7 +45,8 @@ def interfaceMenu():
 
     # Define as dimensões da janela e sua posição no centro da tela
     root.geometry(
-        f"{600}x{300}+{int((root.winfo_screenwidth() / 2) - (600 / 2))}+{int((root.winfo_screenheight() / 2) - (300 / 2))}")
+        f"{600}x{350}+{int((root.winfo_screenwidth() / 2) - (600 / 2))}+{int((root.winfo_screenheight() / 2) - (350 / 2))}")
+
     root.resizable(False, False)
 
     # Criando a barra de menus
@@ -95,9 +97,13 @@ def interfaceMenu():
         root, text="Treinar modelo", command=lambda: train_model())
     instance_model_button.pack()
 
-    instance_model_button = tk.Button(
-        root, text="Classificar imagem", command=lambda: classify_image())
-    instance_model_button.pack()
+    classification_button = tk.Button(
+        root, text="Classificar imagem", command=lambda: classify_image(image_info, image_label, result_label))
+    classification_button.pack()
+
+    binary_classification_button = tk.Button(
+        root, text="Classificação", command=lambda: binary_classify_image())
+    binary_classification_button.pack()
 
     # Inicia o loop principal da janela
     root.mainloop()

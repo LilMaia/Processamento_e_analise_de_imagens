@@ -26,7 +26,6 @@ def classify_image(image_info, multi_classification, result_label):
 
     model = densenet121_model()
     # Carregando o modelo treinado
-    model = load_model('model.h5')
 
     model.load_weights('model.h5', by_name=True)
 

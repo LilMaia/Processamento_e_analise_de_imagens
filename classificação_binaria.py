@@ -18,10 +18,11 @@ import tkinter as tk
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.preprocessing import LabelBinarizer
 
-def classify_image():
+
+def binary_classify_image():
     model = densenet121_model()
 
-    #model = load_model('model.h5')
+    # model = load_model('model.h5')
 
     model.load_weights('model.h5', by_name=True)
 
@@ -50,9 +51,12 @@ def classify_image():
 
     # Calcula as métricas
     accuracy = accuracy_score(ytest_binary, predictions_binary)
-    precision = precision_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
-    recall = recall_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
-    f1 = f1_score(ytest_binary, predictions_binary, average='weighted', zero_division=1)
+    precision = precision_score(
+        ytest_binary, predictions_binary, average='weighted', zero_division=1)
+    recall = recall_score(ytest_binary, predictions_binary,
+                          average='weighted', zero_division=1)
+    f1 = f1_score(ytest_binary, predictions_binary,
+                  average='weighted', zero_division=1)
 
     # Fim da contagem do tempo de execução
     end_time = time.time()
