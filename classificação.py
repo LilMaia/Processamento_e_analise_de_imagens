@@ -17,8 +17,6 @@ import time
 import tkinter as tk
 
 # função para classificar a imagem entre 4 classes diferentes
-
-
 def classify_image(image_info, multi_classification, result_label):
     start_time = time.time()
     # cria uma lista com o nome das classes
