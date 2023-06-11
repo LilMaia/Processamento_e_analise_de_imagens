@@ -16,8 +16,7 @@ from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 from segmentar import segmentar_mama
-from treino_utils_utils import generateTrainImages
-from treino import treino
+from treino_utils import generateTrainImages
 from treino import train_model
 from classificação_binaria import binary_classify_image
 from classificação import classify_image
