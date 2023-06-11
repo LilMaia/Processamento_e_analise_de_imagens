@@ -13,6 +13,8 @@ from modelo import densenet121_model
 from treino_utils import pegar_imagens_e_labels
 from treino_utils import split_data
 import time
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def train_model():
@@ -40,14 +42,14 @@ def train_model():
 
     # salva o modelo com a melhor acurácia
     checkpoint = ModelCheckpoint('model.h5', verbose=1, save_best_only=True)
-
-    # treina o modelo
-    model.fit(xtrain, ytrain, batch_size=227,
-              steps_per_epoch=xtrain.shape[0] // 227,
-              epochs=50,
-              verbose=1,
-              callbacks=[checkpoint],
-              validation_data=(xtest, ytest))
+    
+    # treina o modelo e guarda o histórico
+    history = model.fit(xtrain, ytrain, batch_size=227,
+                        steps_per_epoch=xtrain.shape[0] // 227,
+                        epochs=50,
+                        verbose=1,
+                        callbacks=[checkpoint],
+                        validation_data=(xtest, ytest))
 
     # avalia o modelo
     score = model.evaluate(xtrain, ytrain, verbose=0)
@@ -58,3 +60,15 @@ def train_model():
     end_time = time.time()
     execution_time = end_time - start_time
     print("Tempo de execução: ", execution_time, "segundos")
+
+    # plota o gráfico de convergência
+    plt.figure(figsize=(8, 6))
+    plt.plot(np.arange(1, len(history.history['accuracy']) + 1), history.history['accuracy'], label='Training Accuracy')
+    plt.plot(np.arange(1, len(history.history['val_accuracy']) + 1), history.history['val_accuracy'], label='Validation Accuracy')
+    plt.plot(np.arange(1, len(history.history['loss']) + 1), history.history['loss'], label='Training Loss')
+    plt.plot(np.arange(1, len(history.history['val_loss']) + 1), history.history['val_loss'], label='Validation Loss')
+    plt.title('Training and Validation Convergence')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy/Loss')
+    plt.legend()
+    plt.show()
