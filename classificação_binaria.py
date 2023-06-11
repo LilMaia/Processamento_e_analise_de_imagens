@@ -16,10 +16,11 @@ import tkinter as tk
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import matplotlib.pyplot as plt
 
-def classify_image():
+
+def binary_classify_image():
     model = densenet121_model()
 
-    #model = load_model('model.h5')
+    # model = load_model('model.h5')
 
     model.load_weights('model.h5', by_name=True)
 
