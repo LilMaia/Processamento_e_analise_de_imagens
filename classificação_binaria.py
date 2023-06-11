@@ -68,20 +68,14 @@ def binary_classify_image():
     
      # Início da contagem do tempo de execução
     start_time = time.time()
-
+    
     # faz a predição da imagem
     predictions = model.predict(xtest)
-
     predictions_classes = np.argmax(predictions, axis=1)
-
     ytest_classes = np.argmax(ytest, axis=1)
 
     # Calcula a matriz de confusão
     confusion_mat = confusion_matrix(ytest_classes, predictions_classes)
-
-
-
-
     accuracy = np.sum(np.diag(confusion_mat)) / 1256
     sensitivity_mean = np.mean(np.diag(confusion_mat) / np.sum(confusion_mat, axis=1))
     specificity_mean = 1 - np.sum(confusion_mat - np.diag(np.diag(confusion_mat))) / 3768
