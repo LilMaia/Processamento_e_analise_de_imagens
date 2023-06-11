@@ -84,20 +84,17 @@ def interfaceMenu():
         min_value_slider.get(), max_value_slider.get(), image_label, image_info, result_label))
     max_value_slider.pack()
 
-    # Cria o botão "Segmentar" e adiciona ele à janela principal
     segmentar_button = tk.Button(
         root, text="Segmentar", command=lambda: segmentar_mama(image_info, image_label, result_label))
     segmentar_button.pack()
 
-    # Cria o botão de treino e o adiciona à janela principal
     generate_images_button = tk.Button(
         root, text="Gerar imagens de treino", command=lambda: generateTrainImages())
     generate_images_button.pack()
 
-    # Cria o botão "Treinar" e adiciona ele à janela principal
-    segmentar_button = tk.Button(
+    treinar_button = tk.Button(
         root, text="Treinar", command=lambda: treino())
-    segmentar_button.pack()
+    treinar_button.pack()
 
     instance_model_button = tk.Button(
         root, text="Treinar modelo", command=lambda: train_model())
