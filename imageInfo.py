@@ -10,7 +10,6 @@ Giulia Chiucchi - 662103
 # Imports
 from PIL import Image
 
-
 class ImageInfo:
     def __init__(self):
         self.image_tk: Image = None

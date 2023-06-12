@@ -16,10 +16,10 @@ from imageUtils import abrir_imagem
 from zoom import resetar_zoom, aumentar_zoom
 from contraste import ajustar_contraste
 from segmentar import segmentar_mama
-from treino_utils_utils import generateTrainImages
-from treino import treino
+from treino_utils import generateTrainImages
 from treino import train_model
-from classificação_binaria import binary_classify_image
+from treino import train_model
+from classificação_binaria import multi_classify_image
 from classificação import classify_image
 
 
@@ -71,7 +71,7 @@ def interfaceMenu():
 
     # Cria o botão "Zoom Out" e adiciona ele à janela principal
     zoom_out_button = tk.Button(root, text="Retornar a imagem original",
-                                command=lambda: resetar_zoom(image_label, image_info))
+                                command=lambda: resetar_zoom(image_label, image_info,result_label))
     zoom_out_button.pack()
 
     # Cria o slider para ajustar o contraste mínimo
@@ -105,7 +105,7 @@ def interfaceMenu():
     classification_button.pack()
 
     binary_classification_button = tk.Button(
-        root, text="Classificação", command=lambda: binary_classify_image())
+        root, text="Classificação", command=lambda: multi_classify_image())
     binary_classification_button.pack()
 
     # Inicia o loop principal da janela

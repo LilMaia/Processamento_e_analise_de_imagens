@@ -18,7 +18,7 @@ zoom_level = 2
 # Função para resetar o zoom
 
 
-def resetar_zoom(image_label, image_info):
+def resetar_zoom(image_label, image_info, result_label):
     global zoom_level
     # Restaura a imagem original e redefine o nível de zoom
     image_info.image_resized = image_info.img_original.resize(
@@ -31,7 +31,7 @@ def resetar_zoom(image_label, image_info):
 # Função para dar zoom na imagem
 
 
-def aumentar_zoom(image_label, image_info):
+def aumentar_zoom(image_label, image_info, result_label):
     global zoom_level
     # Definindo o Zoom máximo
     zoom_max = 10
