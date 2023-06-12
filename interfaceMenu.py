@@ -18,7 +18,6 @@ from contraste import ajustar_contraste
 from segmentar import segmentar_mama
 from treino_utils import generateTrainImages
 from treino import train_model
-from treino import train_model
 from classificação_binaria import multi_classify_image
 from classificação import classify_image
 
@@ -93,7 +92,7 @@ def interfaceMenu():
     generate_images_button.pack()
 
     treinar_button = tk.Button(
-        root, text="Treinar", command=lambda: treino())
+        root, text="Treinar", command=lambda: train_model())
     treinar_button.pack()
 
     instance_model_button = tk.Button(
