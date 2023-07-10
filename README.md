@@ -11,7 +11,7 @@ O trabalho foi desenvolvido pelos seguintes alunos:
 ## Descrição
 O objetivo deste trabalho é implementar um programa que leia imagens de exames mamográficos, segmente a área da mama do fundo e possibilite o reconhecimento automático da densidade mamária, de acordo com a escala BIRADS. Para isso, é necessário realizar a segmentação automática da região da mama, deixando os elementos de fundo e anotações com valor preto (0), e, em seguida, classificar a densidade da mama, que pode ser classificada em quatro categorias: BIRADS I, BIRADS II, BIRADS III e BIRADS IV.
 
-O dataset com as imagens para o desenvolvimento do aplicativo pode ser encontrado no seguinte link: https://www.dropbox.com/s/qt8afsmdppglahv/mamografias.zip?dl=0
+O dataset com as imagens para o desenvolvimento do aplicativo pode ser encontrado no seguinte link: https://drive.google.com/drive/folders/1VKpHDlFEh9PXQp-E86eO9W36wytQS_8C?usp=sharing
 
 ## Execução
 Para executar o programa, é necessário clonar este repositório. Após ter feito o clone do repositório do programa, abra o diretório do programa no terminal ou prompt de comando do seu sistema operacional. Certifique-se de que você esteja dentro da pasta raiz do programa, que deve conter o arquivo "main.py".
